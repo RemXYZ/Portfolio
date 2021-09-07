@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+
+RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
+RewriteRule ^src/pages/home/parts/test\.js$  test.js [R=301,L]
+
+AddDefaultCharset utf-8
+AddType 'text/html; charset=utf-8' .html .htm .shtml

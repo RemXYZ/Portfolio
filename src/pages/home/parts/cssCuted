@@ -1,0 +1,82 @@
+.banner_img_ellipses {
+    position: absolute;
+    width: 122%;
+    left: -9%;
+    bottom: -50%;
+    opacity: 0.5;
+}
+.banner_ellips {
+    position: absolute;
+    border-radius: 50%;
+}
+.banner_ellips3 {
+    width: 678px;
+    height: 678px;
+    left: 993/1920*100%;
+    top: 101px;
+
+    // transform: translate(0,101/678*100%);
+
+    background: #5295E3;
+}
+.banner_ellips4 {
+    width: 445px;
+    height: 445px;
+    left: 571.5/1920*100%;
+    top: 501.35px;
+
+    background:#3C91DF;
+}
+.banner_ellips5 {
+    width: 593px;
+    height: 593px;
+    right: 0;
+    transform: translate(50%,0);
+    top: -272px;
+    
+    background: #418AE0;
+}
+.banner_ellips6 {
+    width: 332px;
+    height: 332px;
+    left: -233px;
+    top: 105px;
+    
+    background: #328FE6;
+}
+.banner_ellips7 {
+    width: 332px;
+    height: 332px;
+    left: 474px;
+    top: -308px;
+
+    background: #328FE6;
+}
+
+.banner_ellips0 {
+    width: 744px;
+    height: 744px;
+    left: -744 * 0.40px;
+    top: -744 * 0.70px;
+
+    background: radial-gradient(50% 50% at 50% 50%, rgba(145, 80, 250, 0.8) 0%, rgba(215, 97, 244, 0) 99.48%);
+    border-radius: 65px;
+}
+.banner_ellips1 {
+    width: 794px;
+    height: 794px;
+    left: 1500px;
+    top: 345.58px;
+
+    background: radial-gradient(50% 50% at 50% 50%, #794FF0 0%, rgba(131, 99, 221, 0) 99.48%);
+    border-radius: 65px;
+}
+.banner_ellips2 {
+    width: 744px;
+    height: 744px;
+    left: 1251px;
+    top: -401.42px;
+
+    background: radial-gradient(50% 50% at 50% 50%, #4370E3 0%, rgba(67, 151, 228, 0) 99.48%);
+    border-radius: 65px;
+}
