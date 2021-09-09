@@ -1,4 +1,4 @@
-function about(t) {
+export default function about(t) {
 
     const root = getEl(".root");
     let div = "div";

@@ -2,7 +2,91 @@
 //     window.navigator.systemLanguage ||
 //     window.navigator.userLanguage) : "en";
 // language = language.substr(0, 2).toLowerCase();
+let links = {
+    about:"a>#about",
+    blog:"a>blog",
+    contact:"a>contact",
+    uses_page:"a>uses_page",
+    send_message:"a>send_message"
+}
 
+function isLink (settings) {
+    let Link_regexp = /^a>/g;
+    if (Link_regexp.test(settings.tag)) {
+        let splittedTag = settings.tag.split(">");
+        let tag = splittedTag[0];
+        let att = {href:splittedTag[1]};
+        att.class = settings.cls;
+        return {tag,att};
+    }
+    return false;
+}
+
+function pasteText (arr,whereArg,callback) {
+    // console.log(arr)
+    // console.log(callback)
+    let where = whereArg;
+    let thisIsMain = false;
+
+    function doCallback(arg,el) {
+        if (callback !== undefined && callback != false && callback != "") {
+            callback(arg,el)
+        }
+    }
+    
+    if (this instanceof Element & typeof this == "object") {
+        thisIsMain = true;
+        where = this;
+    }
+    if ((!where instanceof Element == false & typeof where != "object")) {
+        console.error("2 agrument must be the DOM element")
+        return 0;
+    }
+    
+    let settings = arr[0];
+    // console.log(settings)
+    let tag = settings.tag;
+    let att = {class:settings.cls};
+    //TEST ON LINK AND IT WILL CHANGE ATT TO CLASS AND HREF!
+    let link = isLink(settings);
+    if (link != false) {
+        att = link.att;
+        tag = link.tag;
+    }
+
+    let newNode;
+    if (settings.g === undefined || !settings.g) {
+        newNode = crEl(tag,att).into(where);
+    }
+    
+    for (let i = 1;i < arr.length;i++) {
+        // if (settings.g) {
+        //     crEl(tag,att).html(arr[i]).into(where);
+        // }
+        if (settings.g === undefined || !settings.g) { 
+            let isArr = Array.isArray(arr[i]);
+            if (isArr) {
+                newNode.pasteText(arr[i],where,callback);   
+            }else {
+                newNode.html(newNode.html() + arr[i])
+                
+                if (settings.callback) {
+                    // console.log(settings, callback)
+                    doCallback(settings.callback,newNode);
+                }
+            }
+        }
+    }
+
+    return newNode;
+}
+setProtoTo(pasteText,getEl);
+let link = {
+    github:"https://github.com/RemXYZ",
+    fb:"#",
+    instagram:"#",
+    twitter:"#"
+}
 //NAMES OF FUNCTION MAST MATCH THE NAMES FROM THE text.js -> animation: ... !!!
 const textAnimations = {
     aboutAn:function (arg) {
@@ -51,16 +135,10 @@ const textAnimations = {
 }
 
 function crHeader (t,lang) {
-    let links = {
-        github:"https://github.com/RemXYZ",
-        fb:"#",
-        instagram:"#",
-        twitter:"#"
-    }
     const langSrcArr = {
-        en:"/src/assets/icons/flags/United-States.png",
-        pl:"/src/assets/icons/flags/Poland.png",
-        ru:"/src/assets/icons/flags/Russia.png"
+        en:"./src/assets/icons/flags/United-States.png",
+        pl:"./src/assets/icons/flags/Poland.png",
+        ru:"./src/assets/icons/flags/Russia.png"
     }
 
 
@@ -80,18 +158,18 @@ function crHeader (t,lang) {
 
         const header_line = crEl("div",{class:"header_menu section"}).into(hdr);
         const logo = crEl("a",{class:"site_logo",href:"#"}).into(header_line).html("Azixon");
-        let h_nav_mini_icon = header_line.crEl("img",{class:"h_nav_mini_icon", src:"/src/assets/icons/menu.svg"});
+        let h_nav_mini_icon = header_line.crEl("img",{class:"h_nav_mini_icon", src:"./src/assets/icons/menu.svg"});
 
         // NAVIGATION ANIMATION
 
         let conact_information = popUps_container.crEl("div",".conact_information display_none",el=>{
-            el.crEl("p",".CI_email").html("Email: #");
+            el.crEl("p",".CI_email").html("Email: hello@gmail.com");
             el.crEl("div",".CI_media",el=>{
-            let src = "/src/assets/icons_sn/";
-            el.crEl("a",{class:"sNLink",href:links.github}).crEl("img",{class:"socialNetwork",src:src+"github.svg"});
-            el.crEl("a",{class:"sNLink",href:links.fb}).crEl("img",{class:"socialNetwork",src:src+"picons_facebook.svg"});
-            el.crEl("a",{class:"sNLink",href:links.instagram}).crEl("img",{class:"socialNetwork",src:src+"picons_instagram.svg"});
-            el.crEl("a",{class:"sNLink",href:links.twitter}).crEl("img",{class:"socialNetwork lastSN",src:src+"picons_twitter.svg"});
+            let src = "./src/assets/icons_sn/";
+            el.crEl("a",{class:"sNLink",href:link.github}).crEl("img",{class:"socialNetwork",src:src+"github.svg"});
+            el.crEl("a",{class:"sNLink",href:link.fb}).crEl("img",{class:"socialNetwork",src:src+"picons_facebook.svg"});
+            el.crEl("a",{class:"sNLink",href:link.instagram}).crEl("img",{class:"socialNetwork",src:src+"picons_instagram.svg"});
+            el.crEl("a",{class:"sNLink",href:link.twitter}).crEl("img",{class:"socialNetwork lastSN",src:src+"picons_twitter.svg"});
             })
         });
         
@@ -238,7 +316,7 @@ function crHeader (t,lang) {
     //////////////////////////////////////////////////
 
     const banner = crEl("div",{class:"banner"});
-    const img = crEl("img",{class:"banner_img",src:"/src/assets/banner/background3.png"});
+    const img = crEl("img",{class:"banner_img",src:"./src/assets/banner/background3.png"});
     banner.append(img);
     // for (let i = 0; i < 9;i++) {
     //     const img_ellipses = crEl("div",{class:`banner_ellips banner_ellips${i}`}).into(banner);
@@ -341,7 +419,7 @@ function crHeader (t,lang) {
         //max: top, right, bottom, left
         function  valRegExp (u) {
             const valRegExp = [new RegExp ("^\\d+(\\.\\d+)?","gi"),new RegExp ("[A-Za-z%]+","g")];
-            return [Number(u.match(valRegExp[0])[0]),u.match(valRegExp[1])[0]];
+            return [u.match(valRegExp[0])[0].num(),u.match(valRegExp[1])[0]];
         }
         
         let val = {
@@ -507,7 +585,7 @@ function crHeader (t,lang) {
                     jProc = yProc;
                     totDir = "y";
                 }
-                myProc[dir] = -1*(val[dir][0] * Number((jProc/100)).toFixed(1));
+                myProc[dir] = -1*(val[dir][0] * (jProc/100)).toFixed(1).num();
                 myProc[totDir] = myProc[dir];
                 myProc.u = val[dir][1];
             }
@@ -545,9 +623,9 @@ function crHeader (t,lang) {
     //DOWNLOADING BANNER CONTENT IMAGES//////////////
 
     let bnCont_Img = crEl("div",".banner_cont_img_box",(el)=>{}).into(bnr_cnt);
-    let dron1 = crEl("img",{class:"banner_cont_img dron",src:"/src/assets/banner/dron1.png"}).into(bnCont_Img);
-    let dron2 = crEl("img",{class:"banner_cont_img dron",src:"/src/assets/banner/dron2.png"}).into(bnCont_Img);
-    let robot = crEl("img",{class:"banner_cont_img",src:"/src/assets/banner/robot.png"}).into(bnCont_Img);
+    let dron1 = crEl("img",{class:"banner_cont_img dron",src:"./src/assets/banner/dron1.png"}).into(bnCont_Img);
+    let dron2 = crEl("img",{class:"banner_cont_img dron",src:"./src/assets/banner/dron2.png"}).into(bnCont_Img);
+    let robot = crEl("img",{class:"banner_cont_img",src:"./src/assets/banner/robot.png"}).into(bnCont_Img);
     //END BANNER////////////////////////////////////////
 
     function getScroll() {
@@ -590,3 +668,102 @@ function crHeader (t,lang) {
     root.append(hdr);
 
 }
+
+crHeader ({
+    header_nav: [{cls:"h_nav",tag:"nav"},
+        [{cls:"nav-el",tag:link.about,callback:"aboutAn"},"ABOUT"],
+        [{cls:"nav-el",tag:link.blog,callback:"blogAn"},"BLOG"],
+        [{cls:"nav-el",tag:"p",callback:"contactAn"},"CONTACTS"]
+    ],
+    mini_header_nav: [
+        {cls:"h_nav_mini_icon_box display_none",tag:"nav"},
+        [
+            {cls:"h_nav_mini ",tag:"ul"},
+            [{cls:"nav_miniItem",tag:"li"},[{cls:"nav-el nav-el-mini",tag:link.about,callback:"aboutAn"},"ABOUT"]],
+            [{cls:"nav_miniItem",tag:"li"},[{cls:"nav-el nav-el-mini",tag:link.blog,callback:"blogAn"},"BLOG"]],
+            [{cls:"nav_miniItem",tag:"li"},[{cls:"nav-el nav-el-mini",tag:link.contact},"CONTACT"]]
+            // [{cls:"nav_miniItem",tag:"li"},[{cls:"nav-el nav-el-mini",tag:link.contact, callback:"language"},"en"]]
+        ]
+    ],
+    //END HEADER
+    banner_h_line1:[
+        {cls:"banner-t",tag:"h1"},[{cls:"banner-h",tag:"span"},"Azixon"]," is a website about"
+    ],
+    banner_h_line2:[
+        {cls:"banner-h",tag:"h1",g:true},
+        "DESIGN",
+        "IT",
+        "3D",
+        "DEVELOPMENT",
+        "ART",
+        "TECHNOLOGIES"
+    ],
+    //END BANNER
+    about_site: [
+        false,
+        {
+            header:[{cls:"about-site-h",tag:"h3"},"3D Technologies"],
+            text:[{cls:"about-site-t",tag:"p"},"3D models were created in Blender and scripted using technologies such as WebGL and Three.js"]
+        },
+        {
+            header:[{cls:"about-site-h",tag:"h3"},"Open Source"],
+            text:[{cls:"about-site-t",tag:"p"},"The main part of the code that can be found on the site are open source software and used for educational purposes. "]
+        },
+        {
+            header:[{cls:"about-site-h",tag:"h3"},"Design areas"],
+            text:[{cls:"about-site-t",tag:"p"},"The graphic design refers to the following areas: <br> (3D Isometric illustration, 3D icons, Cartoon style, Low poly and Hand painted)"]
+        }
+    ],
+    //END EBOUT SITE
+    recently_on_the_blog: [{cls:"blog-h section_header",tag:"h2"},"Recently on the blog"],
+    //END Recently on the blog
+    about:[{cls:"about-h section_header",tag:"h2"},"About"],
+    about_me:[
+        {cls:"about-me-t",tag:"p"},
+        `Hello! <br>
+        <br>
+        &nbsp;My name is `,[{cls:['about-me-t about-me-t-hl'],tag:"span"}, "Rem"],`. My main direction is `,
+        [{cls:['about-me-t about-me-t-hl'],tag:"span"}, " Web Development"], `
+        and on this site I share my experiences and ideas.<br>
+        &nbsp;I am also well versed and able to create `,
+        [{cls:['about-me-t about-me-t-hl'],tag:"span"}, "3D models"],
+        `. <br>
+        &nbsp;My sphere activities in graphic development are: <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        [UI / UX, Icons, Illustrations and Animation].<br>
+        <br>`,
+        [{cls:['about-me-t about-me-uses-page'],tag:"span"},`&nbsp;If you are interested in the programs and tools that I use, you can check out my `,
+        [{cls:['about-me-t about-me-t-link'],tag:links.uses_page}, "Uses page"]],`<br>
+        &nbsp;Also I’m always glad to new offers and friends,<br>
+        so feel free to `,
+        [{cls:['about-me-t about-me-t-link'],tag:links.send_message}, "Send me a message"]
+    ],
+    about_me_skills: [
+        // {cls:"about_me_skills",tag:"p",g:true},
+        false,
+        `Briefly about my skills:<br>
+        My skills as a programmer`,
+        "My skills as a 3D artist",
+        "My skills as a designer",
+        "Languages I speak"
+    ],
+
+    copyright : [
+        // {cls:"about_me_skills",tag:"p",g:true},
+        {cls:"source_information display_none",tag:"div"},
+        [{cls:"copyright_text about-me-t SI_C_desc",tag:"p"},"Here I indicate the authors of works taken from the Internet"],
+
+        [{cls:"copyright_box",tag:"div",callback:"copyright"},""],
+
+        [{cls:"copyright_text about-me-t",tag:"p"},"If you saw your content and I did not indicate you, please <br>",
+        [{cls:['copyright-link about-me-t-link'],tag:links.send_message}, "contact me"]]
+    ],
+    copyright_phrases:{
+            author:"Author",
+            author_unknown:"Author unknown",
+            designed_by:"Designed by",
+            created_by:"Created by",
+            source:"source",
+            img:"Image"
+        }
+},"ru");

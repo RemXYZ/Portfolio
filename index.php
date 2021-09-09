@@ -2,7 +2,23 @@
 // echo "Hi";
 // die();
 
-// var_dump($_SERVER);
+if ($_SERVER['REQUEST_URI'] == '/') {
+    $Page = 'index';
+    $Module = 'index';
+} else {
+    $URL_Path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $URL_Parts = explode('/', trim($URL_Path, ' /'));
+    $Page = array_shift($URL_Parts);
+    $Module = array_shift($URL_Parts);
+    if (!empty($Module)) {
+        $Param = array();
+        for ($i = 0; $i < count($URL_Parts); $i++) {
+            $Param[$URL_Parts[$i]] = $URL_Parts[++$i];
+        }
+    } else $Module = 'main';
+}
+
+
 //source https://overcoder.net/q/1147611/php-%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B8%D1%82%D1%8C-%D1%82%D0%B5%D0%BA%D1%83%D1%89%D0%B8%D0%B9-%D1%8F%D0%B7%D1%8B%D0%BA-%D0%BE%D1%81-%D0%BA%D0%BB%D0%B8%D0%B5%D0%BD%D1%82%D0%B0
 $defaultLang = 'en';
 function getUserLanguage() {
@@ -35,6 +51,16 @@ function getUserLanguage() {
 }
 //END SOURCE
 
-include_once  "./src/pages/home/home.php";
+if ($Page == 'Index.php'){
+	include_once "./src/pages/home/home.php";
+}
+else if ($Page == 'index') {
+	include_once "./src/pages/home/home.php";
+}
+else if ($Page == 'asajs') {
+	include_once "./src/resources/asajs/asa.js";
+}
+
+
 
 ?>

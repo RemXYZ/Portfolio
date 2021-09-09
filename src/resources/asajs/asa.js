@@ -1,5 +1,5 @@
 /*
-AsaJS v.0.4.5
+AsaJS v.0.4.6
 
 (c) 2021 by RemXYZ. All rights reserved.
 This source code is licensed under the MIT license found in the
@@ -206,12 +206,61 @@ const into = function (obj,prepend) {
 
 }
 
-//Added 26.08.21 v0.4.5
+//Added 09.09.21 v0.4.6
+//MORE: https://developer.mozilla.org/ru/docs/Web/API/fetch
+//MORE: https://good-code.ru/ajax-zapros/
+//MORE: https://learn.javascript.ru/fetch#zagolovki-otveta
+//ajax v - 1.0 (only text and json)
+const ajax = function (option,callback) {
+	const defaultVal = {
+		method:"POST",
+		headers:{
+			text:{"Content-type": "application/x-www-form-urlencoded"},
+			json:{'Content-Type': 'application/json;charset=utf-8'}
+		}
+	}
+	if (!option.method) option.method = defaultVal.method;
+	if (!option.url) return console.error("url: "+option.url+" is incorrect");
+	if (typeof option.data === "string") {option.data = "post="+option.data; }
+	if (typeof option.data === "object" && option.dataType == "text") {
+		let postFrom = [];	
+		for (let [k,v] of Object.entries(option.data)) {
+			postFrom.push(k+"="+v);
+		}
+		option.data = postFrom.join("&");
+	}
+	if (typeof option.data === "object" && option.dataType === "text") {}
 
-const num = function () {
-	return Number(this);
+	if (option.method == "GET") {option.url = option.url+"?"+option.data};
+	
+	if (option.dataType == "text") option.headers = defaultVal.headers.text;
+	if (option.dataType == "json"){ 
+		let data = new FormData();
+		data.append("json", JSON.stringify(option.data));
+		option.data = data;
+	}
+
+	let init = {
+		method:option.method,
+		url:option.url,
+		body:option.data,
+		headers:option.headers,
+		mode: 'cors',
+		cache: 'default'
+	}
+	
+	if (!option.dataType || init.headers === undefined) delete init.headers;
+	if (option.method == "GET") delete init.body;
+
+	return fetch (option.url,init)
+	.then( (response) => {
+		if (response.status !== 200) {           
+			return Promise.reject();
+		}
+		if(callback) callback(response);
+		return response[option.dataType]()
+	});
 }
-String.prototype.num = num;
 
 /////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////FREE PART/////////////////////////////////////////

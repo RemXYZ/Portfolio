@@ -27,7 +27,7 @@ function showSource(e, el, popup) {
 }
 {/* <a href='https://www.freepik.com/vectors/logo'>Logo vector created by myriammira - www.freepik.com</a> */ }
 
-export default function footer(t) {
+function footer(t) {
     let text = t.copyright_phrases;
 
     //THIS MUST BE CONIGURATED MANUALLY
@@ -94,7 +94,7 @@ export default function footer(t) {
         el.crEl(div, ".copyright_mark f_navItem").html(`&#169; 2021 Rem Karablin<br>
         `);
         // <span><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Лицензия Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /></a><p>Regarding the images, more on <a href="#" class="f_navItem">License</a></p></span> 
-        
+
         el.crEl("nav", ".footer_nav", el => {
             // el.crEl("a",{class:"f_navItem",href:"/blog"}).html("Blog");
             el.crEl("div").crEl("a", { class: "f_navItem", href: "/contact" }).html("Contact");

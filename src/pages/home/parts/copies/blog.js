@@ -1,4 +1,4 @@
- function blog(t) {
+export default function blog(t) {
 
     const root = getEl(".root");
 

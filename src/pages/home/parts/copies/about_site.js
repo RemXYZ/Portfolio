@@ -1,4 +1,4 @@
- function about_site(t) {
+export default function about_site(t) {
     const root = getEl(".root");
     const desc = crEl("div",".about_site section");
     let div = "div";

@@ -3,7 +3,7 @@ let links = {
     blog:"a>blog",
     contact:"a>contact",
     uses_page:"a>uses_page",
-    send_message:"a>contact"
+    send_message:"a>send_message"
 }
 
 function isLink (settings) {
@@ -76,7 +76,7 @@ function pasteText (arr,whereArg,callback) {
 
     return newNode;
 }
-function requestText (lang) {
+export default function requestText (lang) {
 setProtoTo(pasteText,getEl);
 let result;
 switch(lang) {
